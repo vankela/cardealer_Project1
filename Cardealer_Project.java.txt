@@ -1,0 +1,124 @@
+Car.java
+
+
+package cardeal;
+
+public class Car {
+	private String model;
+    private double showroomPrice;
+
+    public Car(String model, double showroomPrice) {
+        this.model = model;
+        this.showroomPrice = showroomPrice;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public double getShowroomPrice() {
+        return showroomPrice;
+    }
+
+}
+
+
+bilingProcess.java
+
+
+
+package cardeal;
+
+public class bilingProcess {
+	private Car car;
+    private boolean insurance;
+    private boolean additionalAccessories;
+    private double dealerDiscount;
+
+    public bilingProcess(Car car, boolean insurance, boolean additionalAccessories, double dealerDiscount) {
+        this.car = car;
+        this.insurance = insurance;
+        this.additionalAccessories = additionalAccessories;
+        this.dealerDiscount = dealerDiscount;
+    }
+    public double calculateTotalCost() {
+        double Cost1= car.getShowroomPrice();
+        double totalCost;
+        
+        double rto = 113990;
+        double insuranceCost = insurance ? 47300 : 0;
+        double tcsCharges = 11000;
+        double additionalAccessoriesCost = additionalAccessories ? 15000 : 0;
+        double discount = Math.min(dealerDiscount, 30000);
+        totalCost = Cost1+rto + insuranceCost + tcsCharges + additionalAccessoriesCost - discount;
+        return totalCost;
+    }
+}
+
+
+
+Main.java
+
+package cardeal;
+import java.util.*;
+
+public class Main {
+	public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Car models and prices
+        Car[] cars = {
+                new Car("Polo Trendline", 870000),
+                new Car("Polo Highline", 1009000),
+                new Car("Virtus Trendline", 1105000),
+                new Car("Virtus Highline", 1308000),
+                new Car("Taigun Trendline", 1489000),
+                new Car("Taigun Highline", 1542000),
+                new Car("Taigun Topline", 1771000)
+        };
+
+        // Display car options
+        System.out.println("Car Models:");
+        for (int i = 0; i < cars.length; i++) {
+            System.out.println((i + 1) + ". " + cars[i].getModel());
+        }
+   
+        // Select car model
+        System.out.print("Select car model (1-" + cars.length + "): ");
+        int selectedCarIndex = scanner.nextInt() - 1;
+        Car selectedCar = cars[selectedCarIndex];
+
+        // Insurance option
+        System.out.print("Do you need Insurance (yes/no): ");
+        boolean insurance = scanner.next().equalsIgnoreCase("yes");
+        
+     // Additional accessories option
+        System.out.print("Do you need Additional Accessories (yes/no): ");
+        boolean additionalAccessories = scanner.next().equalsIgnoreCase("yes");
+        
+        // Dealer discount
+        System.out.print("Dealer discount (% or rupees, max 30000): "); 
+        String discountInput = scanner.next();
+        double dealerDiscount;
+        if (discountInput.endsWith("%")) {
+            double discountPercentage = Double.parseDouble(discountInput.substring(0, discountInput.length() - 1));
+            dealerDiscount = selectedCar.getShowroomPrice() * (discountPercentage / 100);
+            
+        } else {
+            dealerDiscount = Math.min(Double.parseDouble(discountInput), 30000);
+        }
+      
+
+        // Perform billing calculation
+        bilingProcess billProcess = new bilingProcess(selectedCar, insurance, additionalAccessories, dealerDiscount);
+        double totalCost = billProcess.calculateTotalCost();
+
+        // Display selected car model and total cost
+        System.out.println("Selected Car Model: " + selectedCar.getModel());
+
+        System.out.println("Total cost: " + totalCost);
+    }
+}
+
+
+
